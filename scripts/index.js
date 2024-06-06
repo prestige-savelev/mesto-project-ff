@@ -1,31 +1,32 @@
 // @todo: Темплейт карточки
-let tempCard = document.getElementById('card-template').content;
+const tempCard = document.getElementById('card-template').content;
 
 // @todo: DOM узлы
-let placesList = document.querySelector('.places__list');
+const placesList = document.querySelector('.places__list');
 
 // @todo: Функция создания карточки
-function addCard (card, delButton) {
+function createCard (cardData, deleteCard) {
     // Клонировали шаблон из темплейта
-    let itemClone = tempCard.querySelector('.places__item').cloneNode(true);
+    const itemClone = tempCard.querySelector('.places__item').cloneNode(true);
     // Переменные вложенных элементов
-    let cardImg = itemClone.querySelector('.card__image');
-    let cardTitle = itemClone.querySelector('.card__title');
-    let cardDel = itemClone.querySelector('.card__delete-button');
+    const cardImg = itemClone.querySelector('.card__image');
+    const cardTitle = itemClone.querySelector('.card__title');
+    const buttonDeleteCard = itemClone.querySelector('.card__delete-button');
     // Установили значения вложенных элементов
-    cardImg.src = card.link;
-    cardTitle.textContent = card.name;
+    cardImg.src = cardData.link;
+    cardTitle.textContent = cardData.name;
+    cardImg.alt = cardData.name;
     // Обработчик удаления карточки
-    cardDel.addEventListener('click', delButton);
+    buttonDeleteCard.addEventListener('click', deleteCard);
     // Возврат значения функции
     return itemClone;
 }
 // @todo: Функция удаления карточки
-function delCard (evt) {
+function deleteCard (evt) {
    evt.target.closest('.places__item').remove();
 }
 
 // @todo: Вывести карточки на страницу
 initialCards.forEach(function(item) {
-    placesList.append(addCard(item, delCard))
+    placesList.append(createCard(item, deleteCard))
 });

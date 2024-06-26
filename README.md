@@ -6,6 +6,7 @@ https://github.com/prestige-savelev/mesto-project-ff
 HTML
 CSS
 JS
+WebPack
 ```
 
 ## Основной упор в проектной работе был на работу с массивами

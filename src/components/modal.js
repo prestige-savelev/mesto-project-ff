@@ -1,4 +1,4 @@
-// Функция открытия попапа
+
 export function openPopap(popap) {
     popap.classList.add('popup_is-opened');
     document.addEventListener('keydown', exitPopapKey)
@@ -9,6 +9,7 @@ export function openPopap(popap) {
 export function exitPopap(popap) {
     popap.classList.remove('popup_is-opened')
     document.removeEventListener('keydown', exitPopapKey)
+    document.addEventListener('click', exitPopapClick)
 }
 
 // Функция закрытия попапа через ESC

@@ -1,4 +1,10 @@
-import {imageOpen} from '../index.js'
+import {openPopap} from './modal.js';
+// Переменные карточки
+const popapImage = document.querySelector('.popup__image');
+const popapTitle = document.querySelector('.popup__caption');
+const popapTypeImage = document.querySelector('.popup_type_image')
+// @todo: Темплейт карточки
+const tempCard = document.getElementById('card-template').content;
 
 export const initialCards = [
     {
@@ -27,12 +33,8 @@ export const initialCards = [
     }
 ];
 
-
-// @todo: Темплейт карточки
-const tempCard = document.getElementById('card-template').content;
-
 // @todo: Функция создания карточки
-export function createCard (cardData, deleteCard, likeCard, imageOpen) {
+export function createCard (cardData, deleteCard, likeCard, handleImageClick) {
     // Клонировали шаблон из темплейта
     const itemClone = tempCard.querySelector('.places__item').cloneNode(true);
     // Переменные вложенных элементов
@@ -49,7 +51,7 @@ export function createCard (cardData, deleteCard, likeCard, imageOpen) {
     // Обработчик лайка карточки
     cardLike.addEventListener('click', likeCard)
     // Обработчик Просмотра изоображения
-    cardImg.addEventListener('click', imageOpen)
+    cardImg.addEventListener('click', handleImageClick)
     // Возврат значения функции
     return itemClone;
 }
@@ -64,6 +66,12 @@ export function likeCard(evt) {
   evt.target.classList.toggle('card__like-button_is-active');
 }
 
-
+// Функция открытия карточки
+export function handleImageClick(evt) {
+  popapImage.src = evt.target.src 
+  popapImage.alt = evt.target.alt 
+  popapTitle.textContent = evt.target.alt 
+  openPopap(popapTypeImage)
+}
 
 

@@ -1,6 +1,7 @@
 import './pages/index.css';
-import {initialCards, createCard, deleteCard, likeCard, handleImageClick} from './components/cards.js';
+import {createCard, deleteCard, likeCard} from './components/cards.js';
 import {openPopap, exitPopap} from './components/modal.js';
+import {initialCards} from './components/initialCards.js';
 
 // Переменные попапов
 const popapNewCard = document.querySelector('.popup_type_new-card')
@@ -20,7 +21,8 @@ const profileDescription = document.querySelector('.profile__description')
 // Переменные кнопок вызовов попапов
 const profileAdd = document.querySelector('.profile__add-button')
 const profileEdit = document.querySelector('.profile__edit-button')
-
+const popapImage = document.querySelector('.popup__image');
+const popapTitle = document.querySelector('.popup__caption');
 // @todo: DOM узлы
 const placesList = document.querySelector('.places__list');
 // @todo: Вывести карточки на страницу
@@ -67,7 +69,13 @@ function handleAddCardSubmit(evt) {
 // Обработчик добавления карточки:
 cardForm.addEventListener('submit', handleAddCardSubmit); 
 
-
+// Функция открытия карточки
+function handleImageClick(evt) {
+    popapImage.src = evt.target.src 
+    popapImage.alt = evt.target.alt 
+    popapTitle.textContent = evt.target.alt 
+    openPopap(popapTypeImage)
+  }
 
 
 

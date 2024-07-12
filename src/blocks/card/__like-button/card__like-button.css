@@ -18,3 +18,10 @@
 .card__like-button:hover {
   opacity: 0.6;
 }
+
+.card-like {
+  font-size: 13px;
+  color: #000000;
+  margin-top: 3px;
+  margin-bottom: 0px;
+}

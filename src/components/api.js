@@ -1,5 +1,5 @@
 // Конфиг API
-export const config = {
+const config = {
     baseUrl: 'https://nomoreparties.co/v1/wff-cohort-18',
     headers: {
       authorization: '8df05132-ed1c-4b3a-b5b0-ea33aed1f5b7',
@@ -16,14 +16,10 @@ export const getUserData = () => {
         if (res.ok) {
             return res.json();
         }
-
-    // если ошибка, отклоняем промис
         return Promise.reject(`Ошибка: ${res.status}`);
     })
-    .catch((err) => {
-        console.log(err); // выводим ошибку в консоль
-    })
 } 
+
 // Загрузка карточек с сервера
 export const getCardData = () => {
     return fetch(`${config.baseUrl}/cards`, {
@@ -33,15 +29,11 @@ export const getCardData = () => {
         if (res.ok) {
             return res.json();
         }
-
-    // если ошибка, отклоняем промис
         return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-        console.log(err); // выводим ошибку в консоль
     })
 } 
 
+// Редактирования профиля
 export const editProfile = (nameValue, JobValue) => {
     return fetch(`${config.baseUrl}/users/me`, {
         method: 'PATCH',
@@ -55,12 +47,7 @@ export const editProfile = (nameValue, JobValue) => {
         if (res.ok) {
             return res.json();
         }
-
-    // если ошибка, отклоняем промис
         return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-        console.log(err); // выводим ошибку в консоль
     })
 }
 
@@ -78,12 +65,7 @@ export const addCard = (obj) => {
         if (res.ok) {
             return res.json();
         }
-
-    // если ошибка, отклоняем промис
         return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-        console.log(err); // выводим ошибку в консоль
     })
 }
 
@@ -97,11 +79,51 @@ export const deleteCardApi = (id) => {
         if (res.ok) {
             return res.json();
         }
-
-    // если ошибка, отклоняем промис
         return Promise.reject(`Ошибка: ${res.status}`);
     })
-    .catch((err) => {
-        console.log(err); // выводим ошибку в консоль
+}
+
+// Запрос постановки лайка карточки
+export const addLikeCard = (idCard) => {
+    return fetch(`${config.baseUrl}/cards/likes/${idCard} `, {
+        method: 'PUT',
+        headers: config.headers
+    })
+    .then(res => {
+        if (res.ok) {
+            return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+    })
+}
+
+// Запрос удаления лайки карточки
+export const deleteLikeCard = (idCard) => {
+    return fetch(`${config.baseUrl}/cards/likes/${idCard} `, {
+        method: 'DELETE',
+        headers: config.headers
+    })
+    .then(res => {
+        if (res.ok) {
+            return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+    })
+}
+
+// Запрос на смену аватарки
+export const addNewAvatar = (urlAvatar) => {
+    return fetch(`${config.baseUrl}/users/me/avatar`, {
+        method: 'PATCH',
+        headers: config.headers,
+        body: JSON.stringify({
+            avatar: urlAvatar
+        })
+    })
+    .then(res => {
+        if (res.ok) {
+            return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
     })
 }

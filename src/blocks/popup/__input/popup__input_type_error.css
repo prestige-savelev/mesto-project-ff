@@ -3,8 +3,8 @@
     display: none;
   }
   
-  .popup__error_visible {
-    display: flex;
-    color: #FF0000;
-    font-size: 12px;
-  }
+.popup__error_visible {
+  display: flex;
+  color: #FF0000;
+  font-size: 12px;
+}

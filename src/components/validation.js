@@ -35,7 +35,7 @@ const hideError = (formSelector, inputElement, inputErrorClass, errorClass) => {
 };
 
 // Функция проверки ошибок и скрытия
-export const checkInputValidity = (formSelector, inputElement, inputErrorClass, errorClass) => {
+const checkInputValidity = (formSelector, inputElement, inputErrorClass, errorClass) => {
     // Проверка на паттерн
     if (inputElement.validity.patternMismatch) {
         inputElement.setCustomValidity(inputElement.dataset.errorMessage)
@@ -50,6 +50,7 @@ export const checkInputValidity = (formSelector, inputElement, inputErrorClass, 
     }   
 };
 
+// Функция очистки валидации
 export const clearValidation = (formSelector, validationConfig) => {
     const submitButtonSelector = formSelector.querySelector(validationConfig.submitButtonSelector)
     const inputList = Array.from(formSelector.querySelectorAll(validationConfig.inputSelector))
@@ -82,6 +83,3 @@ export const enableValidation = ({formSelector, inactiveButtonClass, submitButto
         setEventListeners(formItem, inactiveButtonClass, submitButtonSelector, inputErrorClass, errorClass, inputSelector)
     })
 }
-
-
-// Доделать функцию очистки

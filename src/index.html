@@ -66,14 +66,25 @@
   </div>
 </div>
 <div class="popup popup_type_delete popup_is-animated">
-  <div class="popup__content popup__content__delete">
+  <div class="popup__content popup__content__little">
     <button type="button" class="popup__close"></button>
-    <form class="popup__form" name="new-place">
+    <form class="popup__form popup__form-delete" name="new-place">
       <h3 class="popup__title">Вы уверены?</h3>
       <button type="submit" class="button popup__button popup__button-delete">Да</button>
     </form>
   </div>
 </div>
+</div>
+<div class="popup popup_type_new-avatar popup_is-animated">
+  <div class="popup__content popup__content__little">
+    <button type="button" class="popup__close"></button>
+    <h3 class="popup__title">Обновить аватар</h3>
+    <form class="popup__form" name="new-avatar">
+      <input type="url" name="link" id="link-avatar" class="popup__input popup__input_type_avatar" placeholder="https://somewebsite.com/someimage.jpg" required>
+      <span class="popup__input-error link-avatar-error"></span>
+      <button type="submit" class="button popup__button">Сохранить</button>
+    </form>
+  </div>
 </div>
 
 
@@ -86,7 +97,7 @@
       </h2>
       <div class="like-container">
         <button type="button" class="card__like-button"></button>
-        <p class="card-like">0</p>
+        <p class="card-like"></p>
       </div>
     </div>
   </li>

@@ -3,6 +3,7 @@ import {createCard, likeCard, deleteCard} from './components/cards.js';
 import {openPopap, exitPopap} from './components/modal.js';
 import {enableValidation, clearValidation} from './components/validation.js';
 import {getUserData, getCardData, editProfile, addCard, addNewAvatar} from './components/api.js';
+import {renderLoading} from './components/utils.js'
 
 // Переменные попапов
 const popapTypeNewCard = document.querySelector('.popup_type_new-card')
@@ -33,8 +34,8 @@ const profileAdd = document.querySelector('.profile__add-button')
 const profileEdit = document.querySelector('.profile__edit-button')
 const popapImage = document.querySelector('.popup__image');
 const popapTitle = document.querySelector('.popup__caption');
-// Переменные сабмитов
 
+// Переменные сабмитов
 const popupButtonProfile = profileForm.querySelector('.popup__button')
 const popupButtonCard = cardForm.querySelector('.popup__button')
 const popupButtonAvatar = avatarForm.querySelector('.popup__button')
@@ -44,22 +45,27 @@ const placesList = document.querySelector('.places__list');
 
 // Api глобальные переменные
 let userId;
+let idCardForDelete;
+let itemDomDelete;
+
 
 // Обработчики открытия попапов
-profileAdd.addEventListener('click', () => {openPopap(popapTypeNewCard), clearValidation(cardForm, validationConfig)})
-profileEdit.addEventListener('click', () => {openPopap(popapTypeEditProfile), clearValidation(profileForm, validationConfig)})
-profileImage.addEventListener('click', () => {openPopap(popupTypeNewAvatar), clearValidation(avatarForm, validationConfig)})
+profileAdd.addEventListener('click', () => {openPopap(popapTypeNewCard)})
+profileEdit.addEventListener('click', () => {openPopap(popapTypeEditProfile)})
+profileImage.addEventListener('click', () => {openPopap(popupTypeNewAvatar)})
 
 // Функции работы с попапами 
 
 // Функция смены аватарки
 function handleProfileImageSubmit(evt) {
     evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-    let linkNewAvatar = linkImage.value
+    const linkNewAvatar = linkImage.value
     renderLoading(true, popupButtonAvatar)
     addNewAvatar(linkNewAvatar)
     .then((res) => {
         profileImage.style = `background-image: url(${res.avatar})`
+        clearValidation(avatarForm, validationConfig)
+        exitPopap(popupTypeNewAvatar)
     })
     .catch((err) => {
         console.log(err); // выводим ошибку в консоль
@@ -67,7 +73,6 @@ function handleProfileImageSubmit(evt) {
     .finally(()=> {
         renderLoading(false, popupButtonAvatar)
     })
-    exitPopap(popupTypeNewAvatar)
 }
 
 // Функция редактирования профиля
@@ -82,19 +87,20 @@ function handleProfileFormSubmit(evt) {
     renderLoading(true, popupButtonProfile) // Эта функция добавляет загрузку данных
     // Отправка изменённых данных
     editProfile(nameValue, JobValue)
+    .then((res) => {
+        clearValidation(profileForm, validationConfig)
+        exitPopap(popapTypeEditProfile)    // Закрываем попап
+    })
     .catch((err) => {
         console.log(err); // выводим ошибку в консоль
     })
     .finally(()=> {
         renderLoading(false, popupButtonProfile) // Эта функция добавляет загрузку данных
     })
-    // Закрываем попап
-    exitPopap(popapTypeEditProfile)
 }
 
 // Функция добавления
 function handleAddCardSubmit(evt) {
-    clearValidation(cardForm, validationConfig) // Эта строчка очишяет ошибки валидации
     evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
     // Добавляем в массив данные из полей
     const newCard = {name: titleInput.value, link: linkInput.value}
@@ -102,18 +108,17 @@ function handleAddCardSubmit(evt) {
     // Отправка данних созданой карточки
     addCard(newCard)
     .then((res)=> {
-        placesList.prepend(createCard(res, likeCard, handleImageClick, userId));
+        placesList.prepend(createCard(res, likeCard, handleImageClick, userId, buttonDeleteListener));
+        cardForm.reset()    // Сброс формы
+        clearValidation(cardForm, validationConfig)
+        exitPopap(popapTypeNewCard) // Закрытие попапа  
     })
     .catch((err) => {
-        console.log(err); // выводим ошибку в консоль
+        console.log(err);   // выводим ошибку в консоль
     })
     .finally(()=> {
         renderLoading(false, popupButtonCard)
     })
-    // Сброс формы
-    cardForm.reset()
-    // Закрытие попапа
-    exitPopap(popapTypeNewCard)    
 }
 
 // Функция открытия карточки
@@ -124,22 +129,25 @@ function handleImageClick(evt) {
     openPopap(popapTypeImage)
 }
 
-// Процесс загрузки
-function renderLoading(isLoading, submitButton) {
-    if (isLoading) {
-        submitButton.innerText = 'Сохранение..';
-    } else {
-        submitButton.innerText = 'Сохранить';
-    } 
+// Функция открытия попапа удаления 
+const buttonDeleteListener = (buttonDeleteCard, cardData_id) => {
+    buttonDeleteCard.addEventListener('click', (evt) => {
+        openPopap(popupTypeDeleteCard)
+        idCardForDelete = cardData_id
+        itemDomDelete = evt.target.closest('.places__item')
+    })
 }
 
 // Обработчики сабмита попапов
 
+// Обработчик удаления карточки
+popupTypeDeleteCard.addEventListener('submit', function(evt){
+    evt.preventDefault()
+    deleteCard(idCardForDelete, itemDomDelete)
+})
+
 // Обработчик добавления карточки:
 cardForm.addEventListener('submit', handleAddCardSubmit); 
-
-// Обработчик удаления карточки
-popupTypeDeleteCard.addEventListener('submit', deleteCard)
 
 // Обработчик добавления редактирования профиля:
 profileForm.addEventListener('submit', handleProfileFormSubmit); 
@@ -172,7 +180,7 @@ Promise.all([getUserData(), getCardData()])
     nameInput.value = result[0].name
     jobInput.value = result[0].about
     result[1].forEach(function(item) {
-        placesList.append(createCard(item, likeCard, handleImageClick, result[0]._id))
+        placesList.append(createCard(item, likeCard, handleImageClick, result[0]._id, buttonDeleteListener))
     })
 })
 .catch((err) => {

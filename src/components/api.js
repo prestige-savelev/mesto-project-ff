@@ -7,16 +7,20 @@ const config = {
     }
 }
 
+const checkServer = (res) => {
+    if (res.ok) {
+        return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+}
+
 // Загрузка информации о пользователе с сервера
 export const getUserData = () => {
     return fetch(`${config.baseUrl}/users/me`, {
       headers: config.headers
     })
     .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+        return checkServer(res)
     })
 } 
 
@@ -26,10 +30,7 @@ export const getCardData = () => {
       headers: config.headers
     })
     .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+        return checkServer(res)
     })
 } 
 
@@ -44,10 +45,7 @@ export const editProfile = (nameValue, JobValue) => {
         })
     })
     .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+        return checkServer(res)
     })
 }
 
@@ -62,24 +60,15 @@ export const addCard = (obj) => {
         })
     })
     .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+        return checkServer(res)
     })
 }
 
 // Удаление карточки
 export const deleteCardApi = (id) => {
-    fetch(`${config.baseUrl}/cards/${id}` , {
+    return fetch(`${config.baseUrl}/cards/${id}` , {
         method: 'DELETE',
         headers: config.headers
-    })
-    .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
     })
 }
 
@@ -90,10 +79,7 @@ export const addLikeCard = (idCard) => {
         headers: config.headers
     })
     .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+        return checkServer(res)
     })
 }
 
@@ -104,10 +90,7 @@ export const deleteLikeCard = (idCard) => {
         headers: config.headers
     })
     .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+        return checkServer(res)
     })
 }
 
@@ -121,9 +104,6 @@ export const addNewAvatar = (urlAvatar) => {
         })
     })
     .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(`Ошибка: ${res.status}`);
+        return checkServer(res)
     })
 }

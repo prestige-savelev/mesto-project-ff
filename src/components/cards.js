@@ -1,22 +1,17 @@
-import {openPopap, exitPopap} from './modal.js';
+import {exitPopap} from './modal.js';
 import {addLikeCard, deleteLikeCard, deleteCardApi} from './api.js';
-
-// Переменные карточки
-let idCardForDelete;
-let itemDomDelete;
 
 // @todo: Темплейт карточки
 const tempCard = document.getElementById('card-template').content;
 
 // @todo: Функция создания карточки
-export function createCard (cardData, likeCard, handleImageClick, idCreators) {
+export function createCard (cardData, likeCard, handleImageClick, idCreators, buttonDeleteListener) {
     // Клонировали шаблон из темплейта
     const itemClone = tempCard.querySelector('.places__item').cloneNode(true);
     // Переменные вложенных элементов
     const cardImg = itemClone.querySelector('.card__image');
     const cardTitle = itemClone.querySelector('.card__title');
     const buttonDeleteCard = itemClone.querySelector('.card__delete-button');
-    const popupTypeDelete = document.querySelector('.popup_type_delete')
     const cardLikeButton = itemClone.querySelector('.card__like-button')
     const cardLike = itemClone.querySelector('.card-like')
     // Проверка владельца карточки
@@ -35,12 +30,8 @@ export function createCard (cardData, likeCard, handleImageClick, idCreators) {
     cardTitle.textContent = cardData.name;
     cardImg.alt = cardData.name;
     cardLike.textContent = cardData.likes.length
-    // Обработчик открытия попапа подтверждения удаления карточки
-    buttonDeleteCard.addEventListener('click', (evt) => {
-      openPopap(popupTypeDelete)
-      idCardForDelete = cardData._id
-      itemDomDelete = evt.target.closest('.places__item')
-    })
+    // Обработчик удаления карточки
+    buttonDeleteListener(buttonDeleteCard, cardData._id)
     // Обработчик лайка карточки
     cardLikeButton.addEventListener('click', (evt) => {
       likeCard(evt.target, cardData, cardLike)
@@ -52,12 +43,16 @@ export function createCard (cardData, likeCard, handleImageClick, idCreators) {
 }
 
 // Функция удаления карточки
-export function deleteCard(evt) {
-  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
+export function deleteCard(idCardForDelete, itemDomDelete) {
   const popupTypeDeleteCard = document.querySelector('.popup_type_delete')
-  itemDomDelete.remove();
   deleteCardApi(idCardForDelete)
-  exitPopap(popupTypeDeleteCard); 
+  .then((res) => {
+      itemDomDelete.remove();
+      exitPopap(popupTypeDeleteCard);
+  })
+  .catch((err) => {
+    console.log(err); // выводим ошибку в консоль
+  })
 }
 
 // Функция лайка карточки
